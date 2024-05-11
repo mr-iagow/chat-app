@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import { baseUrl, postRequest } from "../utils/services";
 
 export const AuthContext = createContext();
@@ -12,12 +12,28 @@ export const AuthContextProvider = ({ children }) => {
         email: "",
         password: "",
     });
+    const [loginrError, setLoginError] = useState (null)
+    const [isLoginLoading, setIsLoginLoading] = useState (false)
+    const [loginInfo, setLoginInfo] = useState ({
+      email: "",
+      password: "",
+    });
 
-    console.log ("registerInfo", registerInfo)
+    console.log ("Userr", user);
+    console.log ("loginInfo", loginInfo);
+
+    useEffect(() => {
+      const user = localStorage.getItem("User")
+      setUser(JSON.parse (user))
+    },[])
 
     const updateRegisterInfo = useCallback((info) =>{
         setRegisterInfo(info)
     },[]);
+
+    const updateLoginInfo = useCallback((info) =>{
+      setLoginInfo(info)
+  },[]);
 
     const registerUser = useCallback(async(e) => {
       e.preventDefault();
@@ -34,11 +50,48 @@ export const AuthContextProvider = ({ children }) => {
 
     localStorage.setItem("User", JSON.stringify(response))
      setUser(response)
-    }, [registerInfo])
+    }, [registerInfo]);
+
+    const loginUser = useCallback(async(e) => {
+
+      e.preventDefault()
+
+      setIsLoginLoading (true)
+      setLoginError(null)
+
+      const response =  await postRequest (`${baseUrl}/users/login`, JSON.stringify(loginInfo));
+
+      setIsLoginLoading (false)
+      if(response.error) {
+        return setLoginError(response)
+      }
+
+      localStorage.setItem("User", JSON.stringify(response))
+      setUser(response)
+    }, [loginInfo]);
+
+    const logoutUser = useCallback(() => {
+      localStorage.removeItem("User"); 
+      setUser(null)
+    },[])
 
   return (
     <AuthContext.Provider 
-    value={{user, registerInfo, updateRegisterInfo,registerUser,registerError,isRegisterLoading,}}>
+    value={{
+    user, 
+    registerInfo, 
+    updateRegisterInfo,
+    registerUser,
+    registerError,
+    isRegisterLoading,
+    logoutUser,
+    loginUser,
+    loginInfo,
+    loginrError,
+    updateLoginInfo,
+    isLoginLoading
+    }}
+    >
       {children}
     </AuthContext.Provider>
   );
