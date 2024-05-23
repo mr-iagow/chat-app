@@ -10,7 +10,7 @@ const NavBar = () => {
         <Navbar bg="dark" className="mb-4" style={{ height: "3.72rem" }} expand="lg">
             <Container>
                 <h2>
-                <Link to="/" className="text-light text-decoration-none">Chat Interno
+                <Link to="/" className="text-light text-decoration-none">Chat Interno - Tabalho Faculdade
                 </Link>
                 </h2>
                 { user && (<span className="text-warning">Logged {user?.name}</span>)}

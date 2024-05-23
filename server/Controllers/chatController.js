@@ -5,7 +5,7 @@ const createChat = async (req, res) => {
 
     try {
         const chat = await chatModel.findOne({
-            members: { $all: [firstId, secondId] }
+            members: { $all: [firstId, secondId] },
         });
 
         if (chat) return res.status(200).json(chat);
@@ -29,7 +29,7 @@ const findUserChats = async (req, res) => {
 
     try {
         const chats = await chatModel.find({
-            members: { $all: [userId] }
+            members: { $in: [userId] }
         });
 
         res.status(200).json(chats);
