@@ -29,4 +29,23 @@ export const postRequest = async (url, body) => {
         // Tratar caso o servidor não retorne JSON válido
         return { error: true, message: "Erro ao processar a resposta do servidor" };
     }
-}
+};
+
+export const getRequest =async (url) => {
+
+    const response = await fetch(url)
+
+    const data = await response.json()
+    
+    if (!response.ok){
+        let message = "Um erro ocorreu...";
+
+        if (data?.message){
+            message =  data.message;
+        }
+
+        return {error: true, message};
+    }
+
+    return data;
+};
