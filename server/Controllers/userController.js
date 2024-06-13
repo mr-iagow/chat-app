@@ -17,13 +17,13 @@ const registerUser = async (req, res) =>{
 
         let user = await userModel.findOne({email});
 
-        if (user) return res.status(400).json("User with the given email exist...");
+        if (user) return res.status(400).json("Usuário com Email informado já existe...");
 
-        if (!name || !email || !password) return res.status(400).json("All fiels are required...")
+        if (!name || !email || !password) return res.status(400).json("Todos os campos são obrigatórios...")
 
-        if (!validator.isEmail(email)) return res.status(400).json("Email must be a valid email...")
+        if (!validator.isEmail(email)) return res.status(400).json("O Email precis ser válido...")
 
-        if (!validator.isStrongPassword(password)) return res.status(400).json("the password must be a strong...")
+        if (!validator.isStrongPassword(password)) return res.status(400).json("A Senha precisa ser forte...")
 
         user = new userModel({name, email, password})
 
